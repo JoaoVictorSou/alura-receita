@@ -1,4 +1,5 @@
 # Diretórios
 /venv/
-
+__pycache__/
 # Arquivos
+db.sqlite3
