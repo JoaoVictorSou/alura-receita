@@ -5,3 +5,6 @@ from django.http import HttpResponse
 
 def index(request):
     return render(request, "index.html") # deve-se enviar a requisição juntamente com o arquivo
+
+def receita(request):
+    return render(request, "receita.html")
