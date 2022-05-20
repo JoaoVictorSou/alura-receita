@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime
+from pessoas.models import Pessoa
+
 # Create your models here.
 
 class Receita(models.Model):
@@ -10,3 +12,4 @@ class Receita(models.Model):
     rendimento = models.CharField(max_length=100)
     categoria = models.CharField(max_length=100)
     data_receita = models.DateTimeField(default=datetime.now, blank=True)
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
