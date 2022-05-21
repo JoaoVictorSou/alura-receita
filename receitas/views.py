@@ -5,7 +5,7 @@ from .models import Receita
 # Create your views here.
 
 def index(request):
-    receitas = Receita.objects.all()
+    receitas = Receita.objects.order_by('-data_receita').filter(postar=True)
 
     dados = {
         'receitas': receitas
