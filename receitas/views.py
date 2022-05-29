@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.http import HttpResponse
+
+import receitas
 from .models import Receita
 
 # Create your views here.
@@ -20,3 +22,16 @@ def receita(request, receita_id):
     }
 
     return render(request, "receita.html", dados)
+
+def buscar(request):
+    if 'buscar' in request.GET:
+        buscar_receita = request.GET['buscar']
+
+    receitas = Receita.objects.order_by('-data_receita').filter(nome_receita__icontains = buscar_receita)
+    dados = {
+        'receitas': receitas 
+    }
+
+    return render(request, 'buscar.html', dados)
+
+    

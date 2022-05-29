@@ -1,5 +1,6 @@
 # Diretórios
 /venv/
+/media/
 __pycache__/
 # Arquivos
 db.sqlite3
