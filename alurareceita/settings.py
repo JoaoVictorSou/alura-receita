@@ -134,4 +134,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Mídia
 MEDIA_ROOT = os.path.join(BASE_DIR, "media") # Local onde serão salvas aas mídias
-MEDIA_URL = '/media/' # Caminho padrão para se encontrar as mídias
+MEDIA_URL = '/media/' # Caminho que será padrão para se encontrar as mídias
