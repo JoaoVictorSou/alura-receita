@@ -13,7 +13,7 @@ def index(request):
         'receitas': receitas
     }
 
-    return render(request, "index.html", dados) # deve-se enviar a requisição juntamente com o arquivo
+    return render(request, "receitas/index.html", dados) # deve-se enviar a requisição juntamente com o arquivo
 
 def receita(request, receita_id):
     receita_escolhida = get_object_or_404(Receita, pk=receita_id)
@@ -21,7 +21,7 @@ def receita(request, receita_id):
         'receita': receita_escolhida
     }
 
-    return render(request, "receita.html", dados)
+    return render(request, "receitas/receita.html", dados)
 
 def buscar(request):
     if 'buscar' in request.GET:
@@ -32,6 +32,6 @@ def buscar(request):
         'receitas': receitas 
     }
 
-    return render(request, 'buscar.html', dados)
+    return render(request, 'receitas/buscar.html', dados)
 
     
