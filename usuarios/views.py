@@ -80,7 +80,10 @@ def logout(request):
 
 def dashboard(request):
     if request.user.is_authenticated:
-        return render(request, 'usuarios/dashboard.html')
+        id = request.user.id
+
+        receitas = Receita.objects.order_by("-data_receita").filter(pessoa=id)
+        return render(request, 'usuarios/dashboard.html', {"receitas": receitas})
     else:
         return redirect('login')
 
