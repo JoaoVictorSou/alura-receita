@@ -14,10 +14,7 @@ def cadastro(request):
         senha = request.POST['password']
         senha_comfirmacao = request.POST['password2']
 
-        
-        atributos_com_valor = nome.strip() and email.strip() and senha.strip() and senha_comfirmacao.strip()
-        err = None
-        if atributos_com_valor:
+        if campos_preenchidos((nome, email, senha, senha_comfirmacao)):
             if "@" in email:
                 if senha == senha_comfirmacao:
                     email_duplicado = User.objects.filter(email = email).exists()
@@ -29,22 +26,17 @@ def cadastro(request):
                         return redirect('login')
 
                     else:
-                        err = "email já é reconhecido por um usuário do sistema"
-                        messages.error(request, err)
+                        messages.error(request, "Email já é reconhecido por um usuário do sistema.")
                 
                 else:
-                    err = "senhas não correspondem"
-                    messages.error(request, err)
+                    messages.error(request, "Senhas não correspondem.")
                     
             else:
-                err = "email não segue um padrão conhecido"
-                messages.error(request, err)
+                messages.error(request, "Email não segue um padrão conhecido.")
                 
         else:
-            err = "atributo vazio"
-            messages.error(request, err)
+            messages.error(request, "Atributos vazios.")
             
-        print(err)
         return redirect('cadastro')
     
     return render(request, 'usuarios/cadastro.html')
@@ -100,9 +92,8 @@ def cria_receita(request):
         categoria = request.POST['categoria']
         foto_receita = request.FILES['foto_receita'] # Serve para capturar os arquivos da requisição
         user = get_object_or_404(User, pk=request.user.id)
-        campos_preenchidos = nome_receita and ingredientes and modo_preparo and tempo_preparo and rendimento and categoria and foto_receita
 
-        if campos_preenchidos:
+        if campos_preenchidos((nome_receita, ingredientes, modo_preparo, tempo_preparo, rendimento, categoria, foto_receita)):
             receita = Receita.objects.create(pessoa=user, nome_receita=nome_receita, modo_preparo=modo_preparo,
             ingredientes=ingredientes, tempo_preparo=tempo_preparo, rendimento=rendimento, categoria=categoria, foto_receita=foto_receita)
             receita.save()
@@ -117,3 +108,11 @@ def cria_receita(request):
 
     else:
         return render(request, "usuarios/cria-receita.html")
+
+def campos_preenchidos(campos):
+    preenchidos = False
+    for campo in campos:
+        if str(campo).strip():
+            preenchidos = True
+    
+    return preenchidos
