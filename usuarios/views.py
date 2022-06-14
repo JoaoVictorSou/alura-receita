@@ -16,20 +16,21 @@ def cadastro(request):
 
         if campos_preenchidos((nome, email, senha, senha_comfirmacao)):
             if "@" in email:
-                if senha == senha_comfirmacao:
-                    email_duplicado = User.objects.filter(email = email).exists()
-
-                    if not email_duplicado:
-                        user = User.objects.create_user(username=nome, email=email, password = senha)
-                        user.save()
-                        messages.success(request, "Cadastrado com sucesso!")
-                        return redirect('login')
+                if senha_confirmacao_correspondem(senha, senha_comfirmacao):
+                    if email_unico(email):
+                        if nome_unico(nome):
+                            user = User.objects.create_user(username=nome, email=email, password = senha)
+                            user.save()
+                            messages.success(request, "Cadastrado com sucesso!")
+                            return redirect('login')
+                        else:
+                            messages.error(request, "Nome de usuário já está utilizado no sistema. Tente outro.")
 
                     else:
                         messages.error(request, "Email já é reconhecido por um usuário do sistema.")
                 
                 else:
-                    messages.error(request, "Senhas não correspondem.")
+                    messages.error(request, "a Senha e a confirmação não correspondem.")
                     
             else:
                 messages.error(request, "Email não segue um padrão conhecido.")
@@ -46,7 +47,7 @@ def login(request):
         email = request.POST["email"]
         senha = request.POST["password"]
 
-        if email.strip() and senha.strip():
+        if campos_preenchidos((email, senha)):
             if "@" in email:
                 email_cadastrado = User.objects.filter(email=email).exists()
                 if email_cadastrado:
@@ -110,9 +111,26 @@ def cria_receita(request):
         return render(request, "usuarios/cria-receita.html")
 
 def campos_preenchidos(campos):
-    preenchidos = False
+    preenchidos = True
     for campo in campos:
-        if str(campo).strip():
-            preenchidos = True
-    
+        if not str(campo).strip():
+            preenchidos = False
+            break
+
     return preenchidos
+
+def senha_confirmacao_correspondem(senha, confirmacao_senha):
+    if senha == confirmacao_senha:
+        return True
+    
+    return False
+
+def email_unico(email):
+    email_existe = User.objects.filter(email = email).exists()
+
+    return not email_existe
+
+def nome_unico(nome):
+    nome_existe = User.objects.filter(username = nome).exists()
+
+    return not nome_existe
