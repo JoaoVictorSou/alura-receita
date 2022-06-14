@@ -1,7 +1,8 @@
 from http.client import HTTPResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import auth
+from receitas.models import Receita
 
 # Create your views here.
 
@@ -82,3 +83,30 @@ def dashboard(request):
         return render(request, 'usuarios/dashboard.html')
     else:
         return redirect('login')
+
+def cria_receita(request):
+    if request.method == "POST":
+        nome_receita = request.POST['nome_receita']
+        ingredientes = request.POST['ingredientes']
+        modo_preparo = request.POST['modo_preparo']
+        tempo_preparo = request.POST['tempo_preparo']
+        rendimento = request.POST['rendimento']
+        categoria = request.POST['categoria']
+        foto_receita = request.FILES['foto_receita'] # Serve para capturar os arquivos da requisição
+        user = get_object_or_404(User, pk=request.user.id)
+        campos_preenchidos = nome_receita and ingredientes and modo_preparo and tempo_preparo and rendimento and categoria and foto_receita
+
+        if campos_preenchidos:
+            receita = Receita.objects.create(pessoa=user, nome_receita=nome_receita, modo_preparo=modo_preparo,
+            ingredientes=ingredientes, tempo_preparo=tempo_preparo, rendimento=rendimento, categoria=categoria, foto_receita=foto_receita)
+            receita.save()
+            return redirect('dashboard')
+        else:
+            err = "os campos nome da receita, ingredientes, modo de preparo, tempo de preparo, rendimento, categoria, foto da receita" \
+                " precisam estar preenchidos."
+        
+        print(err)
+        return redirect('criar_receita')
+
+    else:
+        return render(request, "usuarios/cria-receita.html")

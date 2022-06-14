@@ -63,6 +63,7 @@
                                 <li><a href="{% url 'login' %}">Login</a></li>
                                 {% else %}
                                 <li><a href="{% url 'dashboard' %}">Minhas receitas</a></li>
+                                <li><a href="{% url 'cria_receita' %}">Escrever receita</a></li>
                                 <li><a href="{% url 'logout' %}">Logout</a></li>
                                 {% endif %}
                             </ul>
