@@ -1,7 +1,8 @@
+from email import message
 from http.client import HTTPResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib import auth
+from django.contrib import auth, messages
 from receitas.models import Receita
 
 # Create your views here.
@@ -24,19 +25,24 @@ def cadastro(request):
                     if not email_duplicado:
                         user = User.objects.create_user(username=nome, email=email, password = senha)
                         user.save()
+                        messages.success(request, "Cadastrado com sucesso!")
                         return redirect('login')
 
                     else:
                         err = "email já é reconhecido por um usuário do sistema"
+                        messages.error(request, err)
                 
                 else:
                     err = "senhas não correspondem"
+                    messages.error(request, err)
                     
             else:
                 err = "email não segue um padrão conhecido"
+                messages.error(request, err)
                 
         else:
             err = "atributo vazio"
+            messages.error(request, err)
             
         print(err)
         return redirect('cadastro')
@@ -48,7 +54,6 @@ def login(request):
         email = request.POST["email"]
         senha = request.POST["password"]
 
-        err = ""
         if email.strip() and senha.strip():
             if "@" in email:
                 email_cadastrado = User.objects.filter(email=email).exists()
@@ -58,18 +63,16 @@ def login(request):
 
                     if user is not None:
                         auth.login(request, user)
-                        print("Login realizado com sucesso", name)
                         return redirect("dashboard")
                     else:
-                        err = "credencial inválida."
+                        messages.error(request, "Credenciais inválidas.")
                 else:
-                    err = "email não existe cadastrado no site."
+                    messages.error(request, "Email não existe cadastrado no site.")
             else:
-                err = "email não segue padrão reconhecido"
+                messages.error(request, "Email não segue padrão reconhecido.")
         else:
-            err = "não é permitido atributos de senha ou email vazios"
+            messages.error(request, "Não é permitido atributos de senha ou email vazios.")
         
-        print(err)
         return redirect("login")
     
     return render(request, 'usuarios/login.html')
@@ -103,13 +106,14 @@ def cria_receita(request):
             receita = Receita.objects.create(pessoa=user, nome_receita=nome_receita, modo_preparo=modo_preparo,
             ingredientes=ingredientes, tempo_preparo=tempo_preparo, rendimento=rendimento, categoria=categoria, foto_receita=foto_receita)
             receita.save()
+            messages.success(request, "Receita cadastrada com sucesso.")
             return redirect('dashboard')
         else:
-            err = "os campos nome da receita, ingredientes, modo de preparo, tempo de preparo, rendimento, categoria, foto da receita" \
-                " precisam estar preenchidos."
+            err = "Todos os itens exigidos devem ser informados."
+            
+            messages.error(request, err)
         
-        print(err)
-        return redirect('criar_receita')
+        return redirect('cria_receita')
 
     else:
         return render(request, "usuarios/cria-receita.html")
