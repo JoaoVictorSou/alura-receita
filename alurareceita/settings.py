@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from util.postgre import auth as password
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'alura_receita',
         'USER': 'postgres',
-        'PASSWORD': '552210',
+        'PASSWORD': password,
         'HOST': '127.0.0.1'
     }
 }
