@@ -110,6 +110,9 @@ def cria_receita(request):
     else:
         return render(request, "usuarios/cria-receita.html")
 
+def edita_receita(request, receita_id):
+    return render(request, "usuarios/edita-receita.html")
+
 def campos_preenchidos(campos):
     preenchidos = True
     for campo in campos:
