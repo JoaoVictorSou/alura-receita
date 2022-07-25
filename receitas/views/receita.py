@@ -3,8 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
-import receitas
-from .models import Receita
+from receitas.models import Receita
 
 # Create your views here.
 
@@ -100,17 +99,6 @@ def atualiza_receita(request):
     receita.save()
     
     return redirect("dashboard")
-
-def buscar(request):
-    if 'buscar' in request.GET:
-        buscar_receita = request.GET['buscar']
-
-    receitas = Receita.objects.order_by('-data_receita').filter(nome_receita__icontains = buscar_receita)
-    dados = {
-        'receitas': receitas 
-    }
-
-    return render(request, 'receitas/buscar.html', dados)
 
 # UTIL
 def campos_preenchidos(campos):
