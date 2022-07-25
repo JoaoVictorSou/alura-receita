@@ -110,8 +110,20 @@ def cria_receita(request):
     else:
         return render(request, "usuarios/cria-receita.html")
 
+def deleta_receita(request, receita_id):
+    receita = get_object_or_404(Receita, pk = receita_id)
+    receita.delete()
+
+    receita_permanece = Receita.objects.filter(id = receita_id).exists()
+    if not receita_permanece:
+        messages.success(request, "Receita deletada com sucesso!")
+    else:
+        messages.error(request, "Houveram problemas para deletar a receita!")
+    return redirect("dashboard")
+    
+
 def edita_receita(request, receita_id):
-    return render(request, "usuarios/edita-receita.html")
+    pass
 
 def campos_preenchidos(campos):
     preenchidos = True
