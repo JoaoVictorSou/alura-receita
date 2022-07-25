@@ -144,3 +144,4 @@ MESSAGE_TAGS = {
     messages.ERROR: "danger",
     messages.SUCCESS: "success"
 }
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage' # Identifica que mensagens transitam durante a sessão
