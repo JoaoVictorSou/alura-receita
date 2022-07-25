@@ -123,7 +123,41 @@ def deleta_receita(request, receita_id):
     
 
 def edita_receita(request, receita_id):
-    pass
+    if request.method == "GET":
+        receita = get_object_or_404(Receita, pk = receita_id)
+
+        return render(request, "usuarios/edita-receita.html", {'receita': receita})
+    
+    messages.error(request, "A URL utilizada não serve para modificar a receita, apenas para exibir o formulário.")
+    return redirect("dashboard")
+
+def atualiza_receita(request):
+    receita_id = request.POST['receita_id']
+    nome_receita = request.POST['nome_receita']
+    ingredientes = request.POST['ingredientes']
+    modo_preparo = request.POST['modo_preparo']
+    tempo_preparo = request.POST['tempo_preparo']
+    rendimento = request.POST['rendimento']
+
+    receita = get_object_or_404(Receita, pk = receita_id)
+
+    if nome_receita:
+        receita.nome_receita = nome_receita
+    if ingredientes:
+        receita.ingredientes = ingredientes
+    if modo_preparo:
+        receita.modo_preparo = modo_preparo
+    if tempo_preparo:
+        receita.tempo_preparo = tempo_preparo
+    if rendimento:
+        receita.rendimento = rendimento
+    
+    if 'foto_receita' in request.FILES:
+        receita.foto_receita = request.FILES['foto_receita']
+    
+    receita.save()
+    
+    return redirect("dashboard")
 
 def campos_preenchidos(campos):
     preenchidos = True
