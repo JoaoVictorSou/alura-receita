@@ -2,6 +2,7 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404, redirec
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from receitas.models import Receita
 
@@ -10,8 +11,12 @@ from receitas.models import Receita
 def index(request):
     receitas = Receita.objects.order_by('-data_receita').filter(postar=True)
 
+    paginator = Paginator(receitas, 3) # Quantidade de receitas por página
+    page = request.GET.get('page') # Página atual dentro da paginação [QUERY PARAMS]
+    receita_por_pagina = paginator.get_page(page) # Lista de receitas para a página atual
+    
     dados = {
-        'receitas': receitas
+        'receitas': receita_por_pagina
     }
 
     return render(request, "receitas/index.html", dados) # deve-se enviar a requisição juntamente com o arquivo
@@ -62,7 +67,6 @@ def deleta_receita(request, receita_id):
         messages.error(request, "Houveram problemas para deletar a receita!")
     return redirect("dashboard")
     
-
 def edita_receita(request, receita_id):
     if request.method == "GET":
         receita = get_object_or_404(Receita, pk = receita_id)
