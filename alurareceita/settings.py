@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from util.postgre import auth as password
-import os
+import os, sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -144,3 +144,9 @@ MESSAGE_TAGS = {
     messages.SUCCESS: "success"
 }
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage' # Identifica que mensagens transitam durante a sessão
+
+# Explicando caminho da pasta apps
+PROJECT_ROOT = os.path.dirname(__file__) # Pasta deste arquivo
+sys.path.insert(0, os.path.join(PROJECT_ROOT, "../apps")) # Navega para a página apps consumindo todos os apps
+
+
